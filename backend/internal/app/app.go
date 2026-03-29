@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 type App struct {
@@ -12,9 +12,13 @@ type App struct {
 }
 
 func NewApp() (*App, error) {
-	db, err := sql.Open("sqlite3", "./aerytheia.db")
+	db, err := sql.Open("sqlite", "./aerytheia.db")
 	if err != nil {
 		return nil, fmt.Errorf("unable to open database: %w", err)
+	}
+
+	if err := db.Ping(); err != nil {
+		return nil, fmt.Errorf("unable to ping database: %w", err)
 	}
 
 	return &App{
